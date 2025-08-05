@@ -1,0 +1,132 @@
+.layout-container {
+  height: 100vh;
+  width: 100vw;
+}
+
+.layout-sidenav {
+  width: 280px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+
+  .sidebar-header {
+    padding: 24px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      
+      .logo-icon {
+        font-size: 28px;
+      }
+      
+      .app-title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: white;
+      }
+    }
+  }
+
+  .sidebar-menu {
+    padding: 16px 0;
+
+    a.mat-mdc-list-item {
+      color: rgba(255, 255, 255, 0.9);
+      padding: 12px 20px;
+      margin: 4px 12px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+        text-decoration: none;
+      }
+
+      &.active {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+
+      .mat-icon {
+        color: rgba(255, 255, 255, 0.8);
+        margin-right: 12px;
+      }
+
+      span {
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.layout-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.layout-toolbar {
+  background: white !important;
+  color: #333 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+
+  .menu-button {
+    display: none;
+  }
+
+  .page-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .username {
+      font-weight: 500;
+      color: #666;
+    }
+
+    button {
+      color: #666;
+    }
+  }
+}
+
+.layout-content {
+  flex: 1;
+  padding: 24px;
+  background-color: #f5f7fa;
+  overflow-y: auto;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .layout-sidenav {
+    width: 100vw;
+    position: fixed;
+    z-index: 1000;
+  }
+
+  .layout-toolbar .menu-button {
+    display: block;
+  }
+
+  .layout-content {
+    padding: 16px;
+  }
+}

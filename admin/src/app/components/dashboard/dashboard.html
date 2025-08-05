@@ -1,1 +1,58 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+  <!-- Dashboard Header -->
+  <div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <p>Resumen general del sistema de camping</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <mat-icon>event</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.activities }}</h3>
+        <p>Actividades</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <mat-icon>calendar_today</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.reservations }}</h3>
+        <p>Reservas</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <mat-icon>people</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.users }}</h3>
+        <p>Usuarios</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <mat-icon>attach_money</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>${{ stats.revenue }}</h3>
+        <p>Ingresos</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart Section -->
+  <div class="chart-section">
+    <div class="chart-container">
+      <h2>Actividad Semanal</h2>
+      <p-chart type="line" [data]="chartData" [options]="chartOptions"></p-chart>
+    </div>
+  </div>
+</div>
