@@ -1,1 +1,160 @@
-<p>activities works!</p>
+<div class="activities-container">
+  <div class="header">
+    <h1>Gestión de Actividades</h1>
+    <p>Administra las actividades disponibles en el camping</p>
+  </div>
+
+  <!-- Formulario para crear/editar actividades -->
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>{{ isEditing ? 'Editar Actividad' : 'Nueva Actividad' }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="activityForm" (ngSubmit)="onSubmit()" class="activity-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="name" placeholder="Ej: Senderismo">
+            <mat-error *ngIf="activityForm.get('name')?.hasError('required')">
+              El nombre es requerido
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Capacidad</mat-label>
+            <input matInput type="number" formControlName="capacity" placeholder="Ej: 10">
+            <mat-error *ngIf="activityForm.get('capacity')?.hasError('required')">
+              La capacidad es requerida
+            </mat-error>
+            <mat-error *ngIf="activityForm.get('capacity')?.hasError('min')">
+              La capacidad debe ser mayor a 0
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Precio ($)</mat-label>
+            <input matInput type="number" step="0.01" formControlName="price" placeholder="Ej: 25.00">
+            <mat-error *ngIf="activityForm.get('price')?.hasError('required')">
+              El precio es requerido
+            </mat-error>
+            <mat-error *ngIf="activityForm.get('price')?.hasError('min')">
+              El precio debe ser mayor o igual a 0
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Duración (minutos)</mat-label>
+            <input matInput type="number" formControlName="duration" placeholder="Ej: 120">
+            <mat-error *ngIf="activityForm.get('duration')?.hasError('required')">
+              La duración es requerida
+            </mat-error>
+            <mat-error *ngIf="activityForm.get('duration')?.hasError('min')">
+              La duración debe ser mayor a 0
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="description-field">
+          <mat-label>Descripción</mat-label>
+          <textarea matInput formControlName="description" rows="3" placeholder="Describe la actividad..."></textarea>
+          <mat-error *ngIf="activityForm.get('description')?.hasError('required')">
+            La descripción es requerida
+          </mat-error>
+        </mat-form-field>
+
+        <div class="checkbox-container">
+          <mat-checkbox formControlName="is_active">Actividad activa</mat-checkbox>
+        </div>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!activityForm.valid">
+            <mat-icon>{{ isEditing ? 'edit' : 'add' }}</mat-icon>
+            {{ isEditing ? 'Actualizar' : 'Crear' }} Actividad
+          </button>
+          
+          <button mat-button type="button" (click)="resetForm()" *ngIf="isEditing">
+            <mat-icon>cancel</mat-icon>
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tabla de actividades -->
+  <mat-card class="table-card">
+    <mat-card-header>
+      <mat-card-title>Actividades Registradas</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="activities" class="activities-table">
+          
+          <!-- Nombre Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let activity">{{ activity.name }}</td>
+          </ng-container>
+
+          <!-- Descripción Column -->
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Descripción</th>
+            <td mat-cell *matCellDef="let activity" class="description-cell">{{ activity.description }}</td>
+          </ng-container>
+
+          <!-- Capacidad Column -->
+          <ng-container matColumnDef="capacity">
+            <th mat-header-cell *matHeaderCellDef>Capacidad</th>
+            <td mat-cell *matCellDef="let activity">{{ activity.capacity }} personas</td>
+          </ng-container>
+
+          <!-- Precio Column -->
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef>Precio</th>
+            <td mat-cell *matCellDef="let activity">${{ activity.price }}</td>
+          </ng-container>
+
+          <!-- Duración Column -->
+          <ng-container matColumnDef="duration">
+            <th mat-header-cell *matHeaderCellDef>Duración</th>
+            <td mat-cell *matCellDef="let activity">{{ activity.duration }} min</td>
+          </ng-container>
+
+          <!-- Estado Column -->
+          <ng-container matColumnDef="is_active">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let activity">
+              <span class="status" [class.active]="activity.is_active" [class.inactive]="!activity.is_active">
+                {{ activity.is_active ? 'Activa' : 'Inactiva' }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let activity" class="actions-cell">
+              <button mat-icon-button color="primary" (click)="editActivity(activity)" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteActivity(activity.id!)" matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <div *ngIf="activities.length === 0" class="no-data">
+          <mat-icon>event_busy</mat-icon>
+          <p>No hay actividades registradas</p>
+          <p>Crea tu primera actividad usando el formulario de arriba</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

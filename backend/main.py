@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 import psycopg2
 from routes import user
+from routes import actividad
 from models.user import get_user_by_username
 from utils.auth import verify_password, create_access_token, verify_token
 from datetime import timedelta
@@ -20,6 +21,7 @@ app.add_middleware(
 )
 
 app.include_router(user.router, prefix="/api/users")
+app.include_router(actividad.router)
 
 # Ejemplo de conexión a PostgreSQL (sin async, para ejemplo básico)
 DB_HOST = os.getenv('DB_HOST', 'localhost')
